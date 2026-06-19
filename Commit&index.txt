@@ -1,0 +1,37 @@
+
+
+create database siva;
+use siva;
+
+create table account (
+    acc_no INT PRIMARY KEY,
+    name VARCHAR(20),
+    balance INT
+);
+insert into account
+values
+(1,'Siva',10000),
+(2,'Ravi',15000),
+(3,'Sita',20000);
+
+start transaction;
+update account
+set balance = balance + 5000
+where acc_no = 1;
+select *from account;
+commit;
+start transaction;
+update account set balance=balance-300
+where acc_no=2;
+select *from account;
+rollback;
+select *from account;
+
+create index idx_balance
+ON account(balance);
+
+create unique index idx_name
+ON account(name);
+
+
+

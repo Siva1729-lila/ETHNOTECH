@@ -1,0 +1,114 @@
+CREATE DATABASE joins;
+
+USE joins;
+
+CREATE DATABASE joins;
+
+USE joins;
+
+CREATE TABLE customer (
+    c_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10)
+);
+drop table customer;
+
+CREATE TABLE transactions (
+    t_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10),
+    amount INT,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customer(c_id)
+);
+INSERT INTO customer(name)
+VALUES
+('Siva'),
+('Ravi'),
+('Sita'),
+('Anu'),
+('Kiran');
+
+INSERT INTO transactions(name,amount,customer_id)
+VALUES
+('Laptop',50000,1),
+('Mobile',25000,2),
+('TV',30000,1),
+('Watch',5000,3),
+('AC',40000,2),
+('Fridge',35000,5);
+
+SELECT * FROM customer;
+select *from transactions;
+
+SELECT c.c_id,
+       c.name AS customer_name,
+       t.name AS product,
+       t.amount
+FROM customer c
+INNER JOIN transactions t
+ON c.c_id = t.customer_id;
+
+ 
+SELECT c.c_id,
+       c.name,
+       t.name AS product,
+       t.amount
+FROM customer c
+LEFT JOIN transactions t
+ON c.c_id = t.customer_id;
+
+
+
+SELECT c.c_id,
+       c.name,
+       t.name AS product,
+       t.amount
+FROM customer c
+RIGHT JOIN transactions t
+ON c.c_id = t.customer_id;
+
+use joins;
+SELECT c.name,
+       t.name AS product
+FROM customer c
+CROSS JOIN transactions t;
+
+select c.name,
+       t.name as product
+from customer c
+cross join transactions t;
+
+CREATE TABLE employee(
+    emp_id INT,
+    emp_name VARCHAR(20),
+    manager_id INT
+);
+
+SELECT *
+FROM customer c
+LEFT JOIN transactions t
+ON c.c_id=t.customer_id
+UNION
+SELECT *
+FROM customer c
+RIGHT JOIN transactions t
+ON c.c_id=t.customer_id;
+
+select *from customer;
+select *from transactions;
+SELECT customer_id,
+       SUM(amount) AS total
+FROM transactions
+GROUP BY customer_id;
+
+
+SELECT customer_id,
+       SUM(amount) AS total
+FROM transactions
+GROUP BY customer_id
+HAVING SUM(amount) > 50000;
+
+
+
+
+
+

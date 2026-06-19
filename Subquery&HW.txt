@@ -1,0 +1,137 @@
+CREATE DATABASE subquery_db;
+USE subquery_db;
+CREATE TABLE customer (
+    c_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(20)
+);
+CREATE TABLE transactions (
+    t_id INT PRIMARY KEY AUTO_INCREMENT,
+    product VARCHAR(20),
+    amount INT,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customer(c_id)
+);
+INSERT INTO customer(name)
+VALUES
+('Siva'),
+('Ravi'),
+('Sita'),
+('Anu'),
+('Kiran');
+INSERT INTO transactions(product,amount,customer_id)
+VALUES
+('Laptop',50000,1),
+('Mobile',25000,2),
+('TV',30000,1),
+('Watch',5000,3),
+('AC',40000,2),
+('Fridge',35000,5);
+
+SELECT *
+FROM transactions
+WHERE amount =
+(
+    SELECT MAX(amount)
+    FROM transactions
+);
+
+  SELECT MAX(amount)
+    FROM transactions;
+    
+    SELECT *
+FROM transactions
+WHERE amount >
+(
+    SELECT AVG(amount)
+    FROM transactions
+);
+
+SELECT *
+FROM customer
+WHERE c_id =
+(
+    SELECT customer_id
+    FROM transactions
+    WHERE product='Laptop'
+);
+
+SELECT *
+FROM customer
+WHERE c_id NOT IN
+(
+    SELECT customer_id
+    FROM transactions
+);
+
+SELECT *
+FROM transactions
+WHERE amount=(SELECT MAX(amount) FROM transactions);
+
+SELECT *
+FROM transactions
+WHERE amount>(SELECT AVG(amount) FROM transactions);
+
+
+use subquery_db;
+CREATE TABLE customer1 (
+    c_id INT PRIMARY KEY,
+    c_name VARCHAR(20)
+);
+
+CREATE TABLE bank_transaction1 (
+    t_id INT PRIMARY KEY,
+    c_id INT,
+    amount INT,
+    t_date DATE,
+    FOREIGN KEY (c_id) REFERENCES customer(c_id)
+);
+
+INSERT INTO customer1
+VALUES
+(1,'Siva'),
+(2,'Ravi'),
+(3,'Sita'),
+(4,'Anu'),
+(5,'Kiran');
+
+INSERT INTO bank_transaction1
+VALUES
+(101,1,5000,'2025-07-01'),
+(102,1,5000,'2025-07-01'),
+(103,2,2000,'2025-07-02'),
+(104,2,6000,'2025-07-03'),
+(105,3,1000,'2025-07-04'),
+(106,3,4000,'2025-07-04'),
+(107,5,7000,'2025-07-05');
+
+SELECT *
+FROM bank_transaction1
+WHERE amount > 3000;
+
+SELECT c_id,
+       AVG(amount) AS avg_transaction
+FROM bank_transaction1
+GROUP BY c_id;
+
+SELECT c_id,
+       SUM(amount) AS total_amount
+FROM bank_transaction1
+GROUP BY c_id;
+SELECT t_date,
+       AVG(amount) AS avg_per_day
+FROM bank_transaction1
+GROUP BY t_date;
+
+SELECT amount,
+       COUNT(*) AS frequency
+FROM bank_transaction1
+GROUP BY amount
+HAVING COUNT(*) > 1;
+
+SELECT *
+FROM customer
+WHERE c_id NOT IN
+(
+    SELECT c_id
+    FROM bank_transaction1
+);
